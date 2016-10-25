@@ -4,15 +4,15 @@
 
 <dom-module id='cn-container'>
 <template>
-  <style>
-    #empty {
-      stroke: transparent;
-    }
+<style>
+  #empty {
+    stroke: transparent;
+  }
 
-    #fold {
-      stroke: red;
-    }
-  </style>
+  #fold {
+    stroke: red;
+  }
+</style>
   <div id='container'></div>
   <content></content>
 </template>
@@ -27,7 +27,7 @@
         shapes.push({shape: elts[i].init(undefined, i).resolve({}, []), point: new Point(elts[i].offsetX, elts[i].offsetY)});
 
       var svg = toSVG(shapes);      
-      this.$.container.append(svg);
+      Polymer.dom(this.$.container).appendChild(svg);
     },
 
   });

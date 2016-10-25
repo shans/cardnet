@@ -33,12 +33,6 @@ toSVG = function(shapes) {
 
   svg = div.querySelector('svg');
 
-  // TODO: move this elsewhere
-  fold = svg.querySelector('#fold');
-  fold.style.stroke = 'red';
-  empty = svg.querySelector('#empty');
-  empty.style.stroke = 'transparent';
-
   // expand viewbox by 10
   var viewBox = svg.getAttribute('viewBox');
   var [x,y,width,height] = viewBox.split(' ');
