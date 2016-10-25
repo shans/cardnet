@@ -91,6 +91,7 @@
     properties: {
       width: {type: String, value: '<parent>'},
       tabdepth: {type: String, value: "tabdepth"},
+      tabindent: {type: String, value: "tabindent"},
       color: {type: String, value: 'solid'},
       joinFace: {type: Number, value: 0},
       parentFace: {type: Number, value: -1},
@@ -101,7 +102,8 @@
     ready() {
       var width = isNaN(Number(this.width)) ? this.width : Number(this.width);
       var tabdepth = isNaN(Number(this.tabdepth)) ? this.tabdepth : Number(this.tabdepth);
-      this.shape = tabShape(width, tabdepth, this.color, this.id == "" ? undefined : this.id);
+      var tabindent = isNaN(Number(this.tabindent)) ? this.tabindent : Number(this.tabindent);
+      this.shape = tabShape(width, tabdepth, tabindent, this.color, this.id == "" ? undefined : this.id);
     },
 
     init(parent, i) {

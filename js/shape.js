@@ -97,7 +97,6 @@ class Shape {
       shape.sides.push(side.resolve(dict));
     for (var child of this.children) {
       if (child._parentSide !== undefined)
-        console.log(this.sides[child._parentSide].length.unresolved);
         dict['<parent>'] = shape.sides[child._parentSide].length;
       shape.children.push(child.resolve(dict, rules, partials));
     }
