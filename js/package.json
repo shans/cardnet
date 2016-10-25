@@ -1,0 +1,18 @@
+{
+  "name": "cardnet",
+  "version": "1.0.0",
+  "description": "Build nets to cut out of cardboard",
+  "main": "index.js",
+  "dependencies": {
+    "makerjs": "^0.9.14"
+  },
+  "devDependencies": {
+    "mocha": "^3.0.2",
+    "should": "^11.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

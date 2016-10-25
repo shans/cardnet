@@ -1,0 +1,203 @@
+<link rel='import' href='../bower_components/polymer/polymer.html'>
+<link rel='import' href='cardnet.html'>
+
+
+<dom-module id='cn-container'>
+<template>
+  <style>
+    #empty {
+      stroke: transparent;
+    }
+
+    #fold {
+      stroke: red;
+    }
+  </style>
+  <div id='container'></div>
+  <content></content>
+</template>
+<script>
+  Polymer({
+    is: 'cn-container',
+
+    attached() {
+      var elts = Polymer.dom(this).children;
+      var shapes = [];
+      for (var i = 0; i < elts.length; i++)
+        shapes.push({shape: elts[i].init(undefined, i).resolve({}, []), point: new Point(elts[i].offsetX, elts[i].offsetY)});
+
+      var svg = toSVG(shapes);      
+      this.$.container.append(svg);
+    },
+
+  });
+</script>
+</dom-module>
+
+<dom-module id='cn-rect'>
+<script>
+  Polymer({
+    is: 'cn-rect',
+
+    properties: {
+      width: {type: String, value: '<parent>'},
+      height: {type: String, value: '<parent>'},
+      color: {type: String, value: 'solid'},
+      joinFace: {type: Number, value: 0},
+      parentFace: {type: Number, value: -1},
+      offsetX: {type: Number, value: 0},
+      offsetY: {type: Number, value: 0}
+    },
+
+    ready() {
+      var width = isNaN(Number(this.width)) ? this.width : Number(this.width);
+      var height = isNaN(Number(this.height)) ? this.height : Number(this.height);
+      this.shape = rect(width, height, this.color, this.id == "" ? undefined : this.id);
+    },
+
+    init(parent, i) {
+      if (parent) {
+        parent.join(this.shape, (this.parentFace >= 0 ? this.parentFace : i), this.joinFace);
+      }
+
+      var elts = Polymer.dom(this).children;
+      for (var i = 0; i < elts.length; i++)
+        elts[i].init(this.shape, i);
+     
+      this.shape.resolver = shape => {
+        var unresolved = shape.unresolvedVars();
+        var resDict = {};
+        var style = getComputedStyle(this);
+        for (var vname in unresolved) {
+          var value = style.getPropertyValue('--' + vname);
+          if (value !== '')
+            // TODO: Just numbers?
+            resDict[vname] = Number(value);
+        }
+        return resDict;
+      }
+ 
+      return this.shape;
+    }
+  });
+</script>
+</dom-module>
+
+<dom-module id='cn-tab-shape'>
+<script>
+  Polymer({
+    is: 'cn-tab-shape',
+
+    properties: {
+      width: {type: String, value: '<parent>'},
+      tabdepth: {type: String, value: "tabdepth"},
+      color: {type: String, value: 'solid'},
+      joinFace: {type: Number, value: 0},
+      parentFace: {type: Number, value: -1},
+      offsetX: {type: Number, value: 0},
+      offsetY: {type: Number, value: 0}
+    },
+   
+    ready() {
+      var width = isNaN(Number(this.width)) ? this.width : Number(this.width);
+      var tabdepth = isNaN(Number(this.tabdepth)) ? this.tabdepth : Number(this.tabdepth);
+      this.shape = tabShape(width, tabdepth, this.color, this.id == "" ? undefined : this.id);
+    },
+
+    init(parent, i) {
+      if (parent) {
+        parent.join(this.shape, (this.parentFace >= 0 ? this.parentFace : i), this.joinFace);
+      }
+
+      var elts = Polymer.dom(this).children;
+      for (var i = 0; i < elts.length; i++)
+        elts[i].init(this.shape, i);
+     
+      this.shape.resolver = shape => {
+        var unresolved = shape.unresolvedVars();
+        var resDict = {};
+        var style = getComputedStyle(this);
+        for (var vname in unresolved) {
+          var value = style.getPropertyValue('--' + vname);
+          if (value !== '')
+            // TODO: Just numbers?
+            resDict[vname] = Number(value);
+        }
+        return resDict;
+      }
+ 
+      return this.shape;
+    }
+  });
+</script>
+</dom-module>
+
+<style>
+cn-container {
+  --width: 50;
+  --depth: 20;
+  --height: 50;
+}
+
+cn-tab-shape {
+  --tabdepth: 5;
+  --tabindent: 4;
+}
+
+#top cn-tab-shape {
+  --tabdepth: 10;
+}
+</style>
+<cn-container>
+  <cn-rect width='width' height='depth'>
+    <cn-rect id='back' height='height'>
+      <cn-tab-shape parent-face='1'></cn-tab-shape> 
+      <cn-tab-shape parent-face='3'></cn-tab-shape> 
+    </cn-rect>
+    <cn-rect id='right' height='height'>
+    </cn-rect>
+    <cn-rect id='front' height='height'>
+      <cn-tab-shape parent-face='1'></cn-tab-shape> 
+      <cn-rect id='top' height='depth' parent-face='2'>
+        <cn-tab-shape parent-face='1'></cn-tab-shape> 
+        <cn-tab-shape parent-face='2'></cn-tab-shape> 
+        <cn-tab-shape parent-face='3'></cn-tab-shape> 
+      </cn-rect>
+      <cn-tab-shape parent-face='3'></cn-tab-shape> 
+    </cn-rect>
+    <cn-rect id='left' height='height'>
+    </cn-rect>
+  </cn-rect>
+</cn-container>
+
+<!--
+<script>
+var base = rect('width', 'depth', 'solid');
+base.join(rect('depth', 'height', 'solid'), 1, 0);
+base.join(rect('depth', 'height', 'solid'), 3, 0);
+
+var front = base.join(rect('width', 'height', 'solid'), 2, 0);
+front.join(tabShape('height', 'tabdepth', 'solid'), 1, 0);
+front.join(tabShape('height', 'tabdepth', 'solid'), 3, 0);
+
+var back = base.join(rect('width', 'height', 'solid'), 0, 0);
+back.join(tabShape('height', 'tabdepth', 'solid'), 1, 0);
+back.join(tabShape('height', 'tabdepth', 'solid'), 3, 0);
+
+var lid = front.join(rect('width', 'depth', 'solid', id='lid'), 2, 0);
+lid.join(tabShape('width', 'tabdepth', 'solid'), 2, 0);
+lid.join(tabShape('depth', 'tabdepth', 'solid'), 3, 0);
+lid.join(tabShape('depth', 'tabdepth', 'solid'), 1, 0);
+
+var styleRules = 
+  [
+    new Rule(new ElementSelector('tabShape'), {tabdepth: 5, tabindent: 4}),
+    new Rule(new ComplexSelector(new IDSelector('lid')).append(Descendant, new ElementSelector('tabShape')), {tabdepth: 10})
+  ];
+
+
+var svg = toSVG([{shape: base.resolve({width: 20, depth: 30, height: 40}, styleRules), point: new Point(50, 50)}]);
+container.append(svg);
+
+</script>
+--!>
