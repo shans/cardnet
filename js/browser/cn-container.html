@@ -1,0 +1,36 @@
+<link rel='import' href='../bower_components/polymer/polymer.html'>
+<link rel='import' href='cardnet.html'>
+
+<dom-module id='cn-container'>
+<template>
+<style>
+  #empty {
+    stroke: transparent;
+  }
+
+  #fold {
+    stroke: red;
+  }
+</style>
+  <div id='container'></div>
+  <content></content>
+</template>
+<script>
+  Polymer({
+    is: 'cn-container',
+
+    attached() {
+      var elts = Polymer.dom(this).children;
+      var shapes = [];
+      for (var i = 0; i < elts.length; i++)
+        shapes.push({shape: elts[i].init(undefined, i).resolve({}, []), point: new Point(elts[i].offsetX, elts[i].offsetY)});
+
+      var svg = toSVG(shapes);      
+      Polymer.dom(this.$.container).appendChild(svg);
+    },
+
+  });
+</script>
+</dom-module>
+
+

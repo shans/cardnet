@@ -1,0 +1,27 @@
+<link rel='import' href='../bower_components/polymer/polymer.html'>
+<link rel='import' href='cardnet.html'>
+<link rel='import' href='cn-shape-behavior.html'>
+
+<dom-module id='cn-rect'>
+<script>
+  Polymer({
+    is: 'cn-rect',
+    behaviors: [CNShapeBehavior],
+
+    properties: {
+      width: {type: String, value: '<parent>'},
+      height: {type: String, value: '<parent>'},
+      color: {type: String, value: 'solid'},
+    },
+
+    ready() {
+      var width = isNaN(Number(this.width)) ? this.width : Number(this.width);
+      var height = isNaN(Number(this.height)) ? this.height : Number(this.height);
+      this.shape = rect(width, height, this.color, this.id == "" ? undefined : this.id);
+    },
+
+  });
+</script>
+</dom-module>
+
+

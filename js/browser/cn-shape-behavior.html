@@ -1,0 +1,37 @@
+<script>
+var CNShapeBehavior = {
+  properties: {
+    offsetX: {type: Number, value: 0},
+    offsetY: {type: Number, value: 0},
+    joinFace: {type: Number, value: 0},
+    parentFace: {type: Number, value: -1},
+  },
+
+  init(parent, i) {
+    if (parent) {
+      parent.join(this.shape, (this.parentFace >= 0 ? this.parentFace : i), this.joinFace);
+    }
+
+    var elts = Polymer.dom(this).children;
+    for (var i = 0; i < elts.length; i++)
+      elts[i].init(this.shape, i);
+   
+    this.shape.resolver = shape => {
+      var unresolved = shape.unresolvedVars();
+      var resDict = {};
+      var style = getComputedStyle(this);
+      for (var vname in unresolved) {
+        var value = style.getPropertyValue('--' + vname);
+        if (value !== '')
+          // TODO: Just numbers?
+          resDict[vname] = Number(value);
+      }
+      return resDict;
+    }
+
+    return this.shape;
+  }
+}
+</script>
+
+

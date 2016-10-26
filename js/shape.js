@@ -14,7 +14,7 @@ class Shape {
     this.children = [];
     this.inverted = false;
     this.symbolic = false;
-    this.resolve = function() { };
+    this.resolve = function() { return this; };
   }
   
   appendSide(point, color) {

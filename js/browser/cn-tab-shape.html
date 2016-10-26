@@ -1,0 +1,28 @@
+<link rel='import' href='../bower_components/polymer/polymer.html'>
+<link rel='import' href='cardnet.html'>
+<link rel='import' href='cn-shape-behavior.html'>
+
+<dom-module id='cn-tab-shape'>
+<script>
+  Polymer({
+    is: 'cn-tab-shape',
+    behaviors: [CNShapeBehavior],
+
+    properties: {
+      width: {type: String, value: '<parent>'},
+      tabdepth: {type: String, value: "tabdepth"},
+      tabindent: {type: String, value: "tabindent"},
+      color: {type: String, value: 'solid'},
+    },
+   
+    ready() {
+      var width = isNaN(Number(this.width)) ? this.width : Number(this.width);
+      var tabdepth = isNaN(Number(this.tabdepth)) ? this.tabdepth : Number(this.tabdepth);
+      var tabindent = isNaN(Number(this.tabindent)) ? this.tabindent : Number(this.tabindent);
+      this.shape = tabShape(width, tabdepth, tabindent, this.color, this.id == "" ? undefined : this.id);
+    }
+  });
+</script>
+</dom-module>
+
+
