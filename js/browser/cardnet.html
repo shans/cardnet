@@ -46,4 +46,25 @@ toSVG = function(shapes) {
   return svg;
 }
 
+toDXF = function(shapes) {
+  var layers = {};
+  var json = [];
+  for (var shape of shapes)
+    json.push(shape.shape.render(shape.point, layers));
+
+  var dxf = makerjs.exporter.toDXF(json);
+
+  var color = 3;
+  layers.solid = 0;
+  layers.fold = 1;
+  layers.empty = 2;
+  for (var layer in layers) {
+    if (layers[layer] == layer)
+      layers[layer] = color++;
+    dxf = dxf.replace(new RegExp(`8\n${layer}\n`, 'g'), `8\n${layer}\n62\n${layers[layer]}\n`);
+  }
+  
+  return dxf;
+}
+
 </script>

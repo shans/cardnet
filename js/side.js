@@ -56,7 +56,7 @@ class Side {
     if (this.start.symbolic || this.end.symbolic) {
       this.symbolic = true;
       this.color = color;
-      this.resolve = dict => new Side(start.resolve(dict), end.resolve(dict), color);
+      this.resolve = dict => { var s = new Side(start.resolve(dict), end.resolve(dict), color); s.inverted = this.inverted; return s; }
       var d = {};
       start._unresolvedVars(d);
       end._unresolvedVars(d);

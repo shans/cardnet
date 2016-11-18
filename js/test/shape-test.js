@@ -31,13 +31,12 @@ describe('Shape', function() {
     it('should produce a simple description of a simple shape', function() {
       var shape = Shape.rect(20, 10, 'red');
       assert.deepEqual({
-	sides: [
-	  [{type: 'line', origin: [0, -0], end: [20, -0], layer: 'red'}],
-	  [{type: 'line', origin: [20, -0], end: [20, -10], layer: 'red'}],
-	  [{type: 'line', origin: [20, -10], end: [0, -10], layer: 'red'}],
-	  [{type: 'line', origin: [0, -10], end: [0, -0], layer: 'red'}]
-	],
-	children: []
+	paths: {
+	  p0: {type: 'line', origin: [0, -0], end: [20, -0], layer: 'red'},
+	  p1: {type: 'line', origin: [20, -0], end: [20, -10], layer: 'red'},
+	  p2: {type: 'line', origin: [20, -10], end: [0, -10], layer: 'red'},
+	  p3: {type: 'line', origin: [0, -10], end: [0, -0], layer: 'red'}
+	}
       }, shape.render());
     });
   });

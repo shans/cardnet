@@ -1,0 +1,84 @@
+<link rel='import' href='../../bower_components/polymer/polymer.html'>
+<link rel='import' href='../cardnet.html'>
+<link rel='import' href='../cn-container.html'>
+<link rel='import' href='../cn-n-agon.html'>
+<link rel='import' href='../cn-tab-shape.html'>
+
+<style>
+cn-container {
+  --width: 50;
+  --depth: 20;
+  --height: 50;
+  --sideLength: 50;
+}
+
+cn-tab-shape {
+  --tabdepth: 7;
+  --tabindent: 10;
+}
+</style>
+<cn-container>
+  <cn-n-agon sides=5 side-length="sideLength">
+    <cn-n-agon sides=5>
+      <cn-n-agon sides=5 parent-face=2>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=1 inverted color='fold' join-color='shape'></cn-tab-shape>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=2 inverted color='fold' join-color='shape'></cn-tab-shape>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=3></cn-tab-shape>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=4></cn-tab-shape>
+      </cn-n-agon>
+      <cn-tab-shape tabdepth=7 tabindent=10 parent-face=1 inverted color='fold' join-color='shape'></cn-tab-shape>
+      <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=3></cn-tab-shape>
+      <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=4></cn-tab-shape>
+    </cn-n-agon>
+    <cn-n-agon sides=5>
+      <cn-n-agon sides=5 parent-face=2>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=1 inverted color='fold' join-color='shape'></cn-tab-shape>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=2 inverted color='fold' join-color='shape'></cn-tab-shape>
+        <cn-n-agon sides=5 parent-face=3>
+          <cn-tab-shape tabdepth=7 tabindent=10 parent-face=1 inverted color='fold' join-color='shape'></cn-tab-shape>
+          <cn-tab-shape tabdepth=7 tabindent=10 parent-face=2 inverted color='fold' join-color='shape'></cn-tab-shape>
+          <cn-tab-shape tabdepth=7 tabindent=10 parent-face=3 inverted color='fold' join-color='shape'></cn-tab-shape>
+          <cn-tab-shape tabdepth=7 tabindent=10 parent-face=4 inverted color='fold' join-color='shape'></cn-tab-shape>
+        </cn-n-agon>
+        <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=4></cn-tab-shape>
+      </cn-n-agon>
+      <cn-tab-shape tabdepth=7 tabindent=10 parent-face=1 inverted color='fold' join-color='shape'></cn-tab-shape>
+      <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=3></cn-tab-shape>
+      <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=4></cn-tab-shape>
+    </cn-n-agon>
+    <cn-n-agon sides=5>
+      <cn-n-agon sides=5 parent-face=2>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=1 inverted color='fold' join-color='shape'></cn-tab-shape>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=2 inverted color='fold' join-color='shape'></cn-tab-shape>
+        <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=3></cn-tab-shape>
+        <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=4></cn-tab-shape>
+      </cn-n-agon>
+      <cn-tab-shape tabdepth=7 tabindent=10 parent-face=1 inverted color='fold' join-color='shape'></cn-tab-shape>
+      <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=3></cn-tab-shape>
+      <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=4></cn-tab-shape>
+    </cn-n-agon>
+    <cn-n-agon sides=5>
+      <cn-n-agon sides=5 parent-face=2>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=1 inverted color='fold' join-color='shape'></cn-tab-shape>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=2 inverted color='fold' join-color='shape'></cn-tab-shape>
+        <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=3></cn-tab-shape>
+        <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=4></cn-tab-shape>
+      </cn-n-agon>
+      <cn-tab-shape tabdepth=7 tabindent=10 parent-face=1 inverted color='fold' join-color='shape'></cn-tab-shape>
+      <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=3></cn-tab-shape>
+      <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=4></cn-tab-shape>
+    </cn-n-agon>
+    <cn-n-agon sides=5>
+      <cn-n-agon sides=5 parent-face=2>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=1 inverted color='fold' join-color='shape'></cn-tab-shape>
+        <cn-tab-shape tabdepth=7 tabindent=10 parent-face=2 inverted color='fold' join-color='shape'></cn-tab-shape>
+        <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=3></cn-tab-shape>
+        <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=4></cn-tab-shape>
+      </cn-n-agon>
+      <cn-tab-shape tabdepth=7 tabindent=10 parent-face=1 inverted color='fold' join-color='shape'></cn-tab-shape>
+      <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=3></cn-tab-shape>
+      <cn-tab-shape width=50 tabdepth=7 tabindent=10 parent-face=4></cn-tab-shape>
+    </cn-n-agon>
+  </cn-n-agon>
+</cn-container>
+

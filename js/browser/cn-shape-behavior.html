@@ -5,11 +5,16 @@ var CNShapeBehavior = {
     offsetY: {type: Number, value: 0},
     joinFace: {type: Number, value: 0},
     parentFace: {type: Number, value: -1},
+    joinColor: {type: String}
   },
 
   init(parent, i) {
+    if (this.getAttribute('inverted') !== null) {
+      this.shape.invert();
+    }
+
     if (parent) {
-      parent.join(this.shape, (this.parentFace >= 0 ? this.parentFace : i), this.joinFace);
+      parent.join(this.shape, (this.parentFace >= 0 ? this.parentFace : i), this.joinFace, undefined, this.joinColor);
     }
 
     var elts = Polymer.dom(this).children;

@@ -55,22 +55,21 @@ function resolvePoint2(a, b, f) {
   return new Point(resolve2(a.x, b.x, f), resolve2(a.y, b.y, f));
 }
 
+function stringToUnresolved(s) {
+  if (typeof(s) == 'string') {
+    var u = a => a[s];
+    u.unresolved = [s];
+    u.initial = s;
+    return u;
+  } else {
+    return s;
+  }
+}
+
 class Point {
   constructor(x, y) {
-    if (typeof(x) == 'string') {
-      this.x = a => a[x];
-      this.x.unresolved = [x];
-      this.x.initial = x;
-    }
-    else
-      this.x = x;
-    if (typeof(y) == 'string') {
-      this.y = a => a[y];
-      this.y.unresolved = [y];
-      this.y.initial = y;
-    }
-    else
-      this.y = y;
+    this.x = stringToUnresolved(x);
+    this.y = stringToUnresolved(y);
 
     if (typeof(this.x) == 'function' || typeof(this.y) == 'function')
       this.symbolic = true;

@@ -43,6 +43,7 @@ class Shape {
   _resolve(dict, rules, partials) {
     var shape = new Shape(this.id);
     var matched = [];
+    shape.inverted = this.inverted;
 
     partials = partials || {'descendant': [], 'child': []};
     var newPartials = {'descendant': [], 'child': []};
@@ -123,7 +124,7 @@ class Shape {
       child.invert();
   }
 
-  join(shape, thisSide, shapeSide, offset) {
+  join(shape, thisSide, shapeSide, offset, joinColor) {
     offset = offset || 0;
     this.children.push(shape);
     var cid = this.children.length - 1;
@@ -132,19 +133,19 @@ class Shape {
       shape._parentSide = thisSide;
     }
     if (!this.symbolic)
-      return this._join(cid, thisSide, shapeSide, offset);
+      return this._join(cid, thisSide, shapeSide, offset, joinColor);
     var _resolve = this.resolve.bind(this);
     this.resolve = function(dict, rules) {
       // is this correct?! An alternative would be to keep around the string version
       // of deferred values.
       var shape = _resolve(dict, rules);
-      shape._join(cid, thisSide, shapeSide, offset);
+      shape._join(cid, thisSide, shapeSide, offset, joinColor);
       return shape;
     }
     return shape;
   }
 
-  _join(cid, thisSide, shapeSide, offset) {
+  _join(cid, thisSide, shapeSide, offset, joinColor) {
     var shape = this.children[cid];
     thisSide = this.sides[thisSide];
     shapeSide = shape.sides[shapeSide];
@@ -177,9 +178,11 @@ class Shape {
     if (this.inverted !== shape.inverted) {
       shapeSplits = shapeSplits.map(a => shapeSide.length - a);
       shapeSplits.reverse();
+      offset += thisSide.length;
+      console.log(shapeSplits);
     }
 
-    thisSide.segment(selfSplits[0], selfSplits[1], "fold");
+    thisSide.segment(selfSplits[0], selfSplits[1], joinColor || "fold");
     shapeSide.segment(shapeSplits[0], shapeSplits[1], "empty");
 
     shape.base = thisSide.start.subtract(shapeSide.end).add(thisSide.end.subtract(thisSide.start).multiply(offset / thisSide.length));
