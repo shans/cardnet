@@ -127,5 +127,25 @@ describe('AlgorithmicValue', function() {
       var w = v.resolve({width: 22, height: 41, depth: 34});
       assertResolved(w, 97);
     });
+    it('should allow for complicated trees of dependencies', function() {
+      var v = resolve.AlgorithmicValue.apply((a, b) => a + b, 
+        resolve.AlgorithmicValue.apply((a, b) => a * b, resolve.Value.fromString("x"), resolve.Value.fromString("y | z | 24")),
+        resolve.AlgorithmicValue.apply((a, b) => a / b, resolve.Value.fromString("a | b"), resolve.Value.fromString(2)));
+      assertAlgorithmic(v, ['x', 'y', 'z', 'a', 'b']);
+      var w = v.resolve({b: 10});
+      assertAlgorithmic(w, ['x']);
+      var x = w.resolve({x: 20});
+      assertResolved(x, 485);
+    });
   }); 
+});
+
+describe('ElementReferenceValue', function() {
+  describe('#resolve()', function() {
+    it('should resolve when an element has a parent on the side recorded in the reference', function() {
+      var v = new resolve.ElementReferenceValue({parent: {sides: [undefined, {length: resolve.Value.fromString(20)}]}, parentSide: 1, sideToParent: 3}, 3);
+      var w = v.resolve({});
+      assertResolved(w, 20);
+    });
+  });
 });

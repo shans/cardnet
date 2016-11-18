@@ -101,7 +101,9 @@ class ElementReferenceValue extends Value {
   }
 
   resolve(dict) {
-    return this.element.sides[this.side].length.resolve();
+    if (this.element.sideToParent == this.side)
+      return this.element.parent.sides[this.element.parentSide].length.resolve();
+    return this;
   }
 }
 

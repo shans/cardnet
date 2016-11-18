@@ -127,6 +127,9 @@ class Shape {
   join(shape, thisSide, shapeSide, offset, joinColor) {
     offset = offset || 0;
     this.children.push(shape);
+    shape.parent = this;
+    shape.sideToParent = shapeSide;
+    shape.parentSide = thisSide;
     var cid = this.children.length - 1;
     if (shape.symbolic) {
       this.symbolic = true;
