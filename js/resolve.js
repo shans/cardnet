@@ -21,6 +21,8 @@ class Value {
   }
 }
 
+exports.toValue = Value.toValue;
+
 class ResolvedValue extends Value {
   constructor(value) {
     super();
@@ -101,6 +103,8 @@ class AlgorithmicValue extends Value {
     return new AlgorithmicValue(args, f).resolve({});
   }
 }
+
+exports.apply = AlgorithmicValue.apply;
 
 class ElementReferenceValue extends Value {
   constructor(element, side) { 

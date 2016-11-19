@@ -179,10 +179,9 @@ class Shape {
     var shapeSplits = [Math.max(-offset, 0), Math.min(thisSide.length.value - offset, shapeSide.length.value)];
 
     if (this.inverted !== shape.inverted) {
-      shapeSplits = shapeSplits.map(a => shapeSide.length - a);
+      shapeSplits = shapeSplits.map(a => shapeSide.length.value - a);
       shapeSplits.reverse();
       offset += thisSide.length.value;
-      console.log(shapeSplits);
     }
 
     thisSide.segment(selfSplits[0], selfSplits[1], joinColor || "fold");

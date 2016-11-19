@@ -15,13 +15,14 @@
     },
    
     ready() {
-      var sideLength = stringToUnresolved(isNaN(Number(this.sideLength)) ? this.sideLength : Number(this.sideLength));
+      var sideLength = toValue(this.sideLength);
       var angle = 2 * Math.PI / this.sides;
-      var radius = resolve1(sideLength, l => l / 2 / Math.sin(angle / 2));
+      var radius = apply(l => l / 2 / Math.sin(angle / 2), sideLength);
       var points = [];
-      var lastPoint = new Point(0, resolve1(radius, r => -r));
+      var lastPoint = new Point(0, apply(r => -r, radius));
       for (var i = 1; i < this.sides; i++) {
-        var thisPoint = (i => new Point(resolve1(radius, r => Math.sin(i * angle) * r), resolve1(radius, r => -Math.cos(i * angle) * r)))(i);
+        var thisPoint = (i => new Point(apply(r => Math.sin(i * angle) * r, radius), 
+                                        apply(r => -Math.cos(i * angle) * r, radius)))(i);
         points.push(thisPoint.subtract(lastPoint))
       }
 

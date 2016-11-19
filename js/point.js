@@ -1,24 +1,21 @@
 "use strict";
 
 var resolve = require('./resolve.js');
-var Value = resolve.Value;
-var ResolvedValue = resolve.ResolvedValue;
-var AlgorithmicValue = resolve.AlgorithmicValue;
 
 function resolvePoint1(a, f) {
-  return new Point(AlgorithmicValue.apply(f, a.x), AlgorithmicValue.apply(f, a.y));
+  return new Point(resolve.AlgorithmicValue.apply(f, a.x), resolve.AlgorithmicValue.apply(f, a.y));
 }
 
 function resolvePoint2(a, b, f) {
-  return new Point(AlgorithmicValue.apply(f, a.x, b.x), AlgorithmicValue.apply(f, a.y, b.y));
+  return new Point(resolve.AlgorithmicValue.apply(f, a.x, b.x), resolve.AlgorithmicValue.apply(f, a.y, b.y));
 }
 
 class Point {
   constructor(x, y) {
-    this.x = Value.toValue(x);
-    this.y = Value.toValue(y);
+    this.x = resolve.Value.toValue(x);
+    this.y = resolve.Value.toValue(y);
 
-    if (!(this.x instanceof ResolvedValue && this.y instanceof ResolvedValue))
+    if (!(this.x instanceof resolve.ResolvedValue && this.y instanceof resolve.ResolvedValue))
       this.symbolic = true;
   }
 
@@ -39,8 +36,8 @@ class Point {
   }
 
   rotate(angle) {
-    return new Point(AlgorithmicValue.apply((a, b, c) => Math.cos(c) * a - Math.sin(c) * b, this.x, this.y, angle),
-                     AlgorithmicValue.apply((a, b, c) => Math.sin(c) * a + Math.cos(c) * b, this.x, this.y, angle))
+    return new Point(resolve.AlgorithmicValue.apply((a, b, c) => Math.cos(c) * a - Math.sin(c) * b, this.x, this.y, angle),
+                     resolve.AlgorithmicValue.apply((a, b, c) => Math.sin(c) * a + Math.cos(c) * b, this.x, this.y, angle))
   }
 
   normalize() {
@@ -48,17 +45,17 @@ class Point {
   }
 
   dot(point) {
-    return AlgorithmicValue.apply((a, b) => a + b,
-        AlgorithmicValue.apply((a, b) => a * b, this.x, point.x),
-	AlgorithmicValue.apply((a, b) => a * b, this.y, point.y));
+    return resolve.AlgorithmicValue.apply((a, b) => a + b,
+        resolve.AlgorithmicValue.apply((a, b) => a * b, this.x, point.x),
+	resolve.AlgorithmicValue.apply((a, b) => a * b, this.y, point.y));
   }
 
   atan2() {
-    return AlgorithmicValue.apply((x, y) => Math.atan2(y, x), this.x, this.y);
+    return resolve.AlgorithmicValue.apply((x, y) => Math.atan2(y, x), this.x, this.y);
   }
 
   angleTo(point) {
-    return AlgorithmicValue.apply((a, b) => a - b, point.atan2(), this.atan2());
+    return resolve.AlgorithmicValue.apply((a, b) => a - b, point.atan2(), this.atan2());
   }
 
   distanceTo(point) {
@@ -66,7 +63,7 @@ class Point {
   }
 
   size() {
-    return AlgorithmicValue.apply((x, y) => Math.sqrt(x * x + y * y), this.x, this.y);
+    return resolve.AlgorithmicValue.apply((x, y) => Math.sqrt(x * x + y * y), this.x, this.y);
   }
 
   clone() {
