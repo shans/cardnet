@@ -10,7 +10,9 @@ function union(setA, setB) {
 
 class Value {
   resolve(dict) { return this; }
-  static fromString(string) {
+  static toValue(string) {
+    if (string instanceof Value)
+      return string.clone();
     if (!isNaN(Number(string)))
       return new ResolvedValue(Number(string));
     if (string.includes('|'))
@@ -25,6 +27,9 @@ class ResolvedValue extends Value {
     this.value = value;
     this.unresolved = new Set();
   }
+  clone() {
+    return new ResolvedValue(this.value);
+  }
 }
 
 class ReferenceValue extends Value {
@@ -33,11 +38,14 @@ class ReferenceValue extends Value {
     this.reference = reference;
     this.unresolved = new Set([reference]);
   }
+  clone() {
+    return new ReferenceValue(this.reference);
+  }
 
   resolve(dict) {
     var reference = this.reference;
     if (reference in dict)
-      return Value.fromString(dict[reference]).resolve(dict);
+      return Value.toValue(dict[reference]).resolve(dict);
 
     return this;
   }
@@ -46,10 +54,7 @@ class ReferenceValue extends Value {
 class WeakReferenceValue extends Value {
   constructor(references) {
     super();
-    if (references[0] instanceof Value)
-      this.references = references;
-    else
-      this.references = references.map(a => Value.fromString(a));
+    this.references = references.map(a => Value.toValue(a));
     this.unresolved = this.references.map(a => a.unresolved).reduce((a,b) => union(a, b), new Set());
   }
 
@@ -74,6 +79,10 @@ class AlgorithmicValue extends Value {
     this.references = args;
     this.algorithm = f;
     this.unresolved = this.references.map(a => a.unresolved).reduce((a,b) => union(a, b), new Set());
+  }
+
+  clone() {
+    return new AlgorithmicValue(this.references.map(a => a.clone()), this.algorithm);
   }
 
   resolve(dict) {

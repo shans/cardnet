@@ -8,46 +8,46 @@ describe('Point', function() {
     it('should return the sum of self and the point provided', function() {
       var p = new Point(4, 5);
       var q = p.add(new Point(6, 2));
-      assert.equal(10, q.x);
-      assert.equal(7, q.y);
+      util.assertResolved(q.x, 10);
+      util.assertResolved(q.y, 7);
     });
     it('should not modify self', function() {
       var p = new Point(4, 5);
       var q = p.add(new Point(6, 2));
-      assert.equal(4, p.x);
-      assert.equal(5, p.y);
+      util.assertResolved(p.x, 4);
+      util.assertResolved(p.y, 5);
     });
     it('should deal with symbolic constants', function() {
       var p = new Point("width", "height");
       var q = p.add(new Point(2, 2));
-      assert.equal(10, q.x({width: 8, height: 4}));
-      assert.equal(6, q.y({width: 8, height: 4}));
+      util.assertResolved(q.x.resolve({width: 8, height: 4}), 10);
+      util.assertResolved(q.y.resolve({width: 8, height: 4}), 6);
     });
   });
   describe('#subtract()', function() {
     it('should return the difference between self and the point provided', function() {
       var p = new Point(4, 5);
       var q = p.subtract(new Point(6, 2));
-      assert.equal(-2, q.x);
-      assert.equal(3, q.y);
+      util.assertResolved(q.x, -2);
+      util.assertResolved(q.y, 3);
     });
     it('should not modify self', function() {
       var p = new Point(4, 5);
       var q = p.subtract(new Point(6, 2));
-      assert.equal(4, p.x);
-      assert.equal(5, p.y);
+      util.assertResolved(p.x, 4);
+      util.assertResolved(p.y, 5);
     });
   });
   describe('#distanceTo()', function() {
     it('should return 0 if called on itself', function() {
       var p = new Point(4, 5);
-      assert.equal(0, p.distanceTo(p));
+      util.assertResolved(p.distanceTo(p), 0);
     });
     it('should return the distance between self and the point provided', function() {
       var p = new Point(4, 5);
       var q = new Point(8, 2);
-      assert.equal(5, p.distanceTo(q));
-      assert.equal(5, q.distanceTo(p));
+      util.assertResolved(p.distanceTo(q), 5);
+      util.assertResolved(q.distanceTo(p), 5);
     });
   }); 
   describe('#angleTo()', function() {

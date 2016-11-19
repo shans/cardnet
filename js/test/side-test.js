@@ -50,6 +50,7 @@ describe('Side', function() {
     it('should cope with symbolic points', function() {
       var side = new Side(new Point(0, 0), new Point('width', 0), 'red');
       side.segment(2, 5, 'green');
+      assert(side.symbolic);
       util.checkSideMatches(side.resolve({width: 10}),
 	[
 	  {at: new Point(0, 0), color: 'red'},

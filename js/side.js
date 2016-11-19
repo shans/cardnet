@@ -109,8 +109,8 @@ class Side {
     }
     if (startOffset >= endOffset)
       throw new RangeError("can't segment: startOffset larger than endOffset");
-    startOffset /= this.length;
-    endOffset /= this.length;
+    startOffset /= this.length.value;
+    endOffset /= this.length.value;
     for (var i = 0; i < this.parts.length; i++) {
       var part = this.parts[i];
       if (startOffset >= part.startOffset && endOffset <= part.endOffset) {

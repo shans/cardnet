@@ -155,9 +155,9 @@ class Shape {
 
     // externally, offset=0 refers to matching centers. Internally, offset applies from
     // the start point of thisSide.
-    offset += (thisSide.length - shapeSide.length) / 2;
+    offset += (thisSide.length.value - shapeSide.length.value) / 2;
 
-    if (offset <= -shapeSide.length && offset > thisSide.length)
+    if (offset <= -shapeSide.length.value && offset > thisSide.length.value)
       throw new RangeError("Can't join, offset out of range");
 
     var angle = shapeSide.direction().angleTo(new Point(0, 0).subtract(thisSide.direction()));
@@ -175,20 +175,20 @@ class Shape {
       TTTTTTT--         TTTTTTTTTT               TTTTTT                       TTTT--                           TTTT----
     */
 
-    var selfSplits = [Math.max(offset, 0), Math.min(shapeSide.length + offset, thisSide.length)];
-    var shapeSplits = [Math.max(-offset, 0), Math.min(thisSide.length - offset, shapeSide.length)];
+    var selfSplits = [Math.max(offset, 0), Math.min(shapeSide.length.value + offset, thisSide.length.value)];
+    var shapeSplits = [Math.max(-offset, 0), Math.min(thisSide.length.value - offset, shapeSide.length.value)];
 
     if (this.inverted !== shape.inverted) {
       shapeSplits = shapeSplits.map(a => shapeSide.length - a);
       shapeSplits.reverse();
-      offset += thisSide.length;
+      offset += thisSide.length.value;
       console.log(shapeSplits);
     }
 
     thisSide.segment(selfSplits[0], selfSplits[1], joinColor || "fold");
     shapeSide.segment(shapeSplits[0], shapeSplits[1], "empty");
 
-    shape.base = thisSide.start.subtract(shapeSide.end).add(thisSide.end.subtract(thisSide.start).multiply(offset / thisSide.length));
+    shape.base = thisSide.start.subtract(shapeSide.end).add(thisSide.end.subtract(thisSide.start).multiply(offset / thisSide.length.value));
     return shape;
   }
 
