@@ -19,6 +19,10 @@ class Point {
       this.symbolic = true;
   }
 
+  dump() {
+    return `(${this.x.dump()}, ${this.y.dump()})`;
+  }
+
   add(point) {
     return resolvePoint2(this, point, (a, b) => a + b);
   }
@@ -70,14 +74,13 @@ class Point {
     return new Point(this.x, this.y);
   }
 
-  _unresolvedVars(dict) {
-    if (this.x.unresolved) {
-      for (var u of this.x.unresolved)
-        dict[u] = u;
-    }
-    if (this.y.unresolved)
-      for (var u of this.y.unresolved)
-        dict[u] = u;
+  unresolved() {
+    var result = [];
+    if (this.x.symbolic)
+      result.push(this.x);
+    if (this.y.symbolic)
+      result.push(this.y);
+    return result;
   }
 
   resolve(dict) {

@@ -118,10 +118,12 @@ describe('AlgorithmicValue', function() {
   }); 
 });
 
+// TODO: probably need some more complex tests here - make sure setElementReferenceLength / getElementReferences navigate the tree correctly.
 describe('ElementReferenceValue', function() {
   describe('#resolve()', function() {
-    it('should resolve when an element has a parent on the side recorded in the reference', function() {
-      var v = new resolve.ElementReferenceValue({parent: {sides: [undefined, {length: resolve.Value.toValue(20)}]}, parentSide: 1, sideToParent: 3}, 3);
+    it('should resolve after setElementReferenceLength is called', function() {
+      var v = new resolve.ElementReferenceValue();
+      v.setElementReferenceLength(resolve.toValue(20));
       var w = v.resolve({});
       util.assertResolved(w, 20);
     });

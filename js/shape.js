@@ -2,6 +2,7 @@
 
 (function() {
 
+var union = require("./resolve.js").union;
 var Point = require("./point.js").Point;
 var Side = require("./side.js").Side;
 
@@ -15,29 +16,38 @@ class Shape {
     this.inverted = false;
     this.symbolic = false;
     this.resolve = function() { return this; };
+    this.pendingJoin = [];
   }
   
   appendSide(point, color) {
     if (point.symbolic) {
       this.symbolic = true;
       this.resolve = this._resolve;
+      this.pendingJoin = this.pendingJoin.concat(point.unresolved().filter(a => a.hasElementReference()));
     }
     this.sides.push(new Side(this._lastPoint, point, color));
     this._lastPoint = point;
   }
 
+  resolveJoin(parentLength) {
+    this.pendingJoin.forEach(a => a.setElementReferenceLength(parentLength));
+    this.pendingJoin = [];
+  }
+
   // TODO: use sets here.
   unresolvedVars() {
-    var result = {};
-    this._unresolvedVars(result);
+    var result = new Set();
+    this.unresolved().forEach(a => result = union(result, a.unresolved));
     return result;
   }
 
-  _unresolvedVars(dict) {
+  unresolved() {
+    var result = [];
     for (var side of this.sides)
-      side._unresolvedVars(dict);
+      result = result.concat(side.unresolved());
     for (var child of this.children)
-      child._unresolvedVars(dict);
+      result = result.concat(side.unresolved());
+    return result;
   }
 
   _resolve(dict, rules, partials) {
@@ -96,9 +106,12 @@ class Shape {
 
     for (var side of this.sides)
       shape.sides.push(side.resolve(dict));
+
     for (var child of this.children) {
+      /*
       if (child._parentSide !== undefined)
         dict['<parent>'] = shape.sides[child._parentSide].length;
+      */
       shape.children.push(child.resolve(dict, rules, partials));
     }
     return shape;
@@ -131,8 +144,12 @@ class Shape {
     shape.sideToParent = shapeSide;
     shape.parentSide = thisSide;
     var cid = this.children.length - 1;
+    shape.resolveJoin(this.sides[thisSide].length);
     if (shape.symbolic) {
-      this.symbolic = true;
+      if (!this.symbolic) {
+        this.symbolic = true;
+        this.resolve = this._resolve;
+      }
       shape._parentSide = thisSide;
     }
     if (!this.symbolic)

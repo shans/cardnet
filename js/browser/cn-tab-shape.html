@@ -16,9 +16,9 @@
     },
    
     ready() {
-      var width = isNaN(Number(this.width)) ? this.width : Number(this.width);
-      var tabdepth = isNaN(Number(this.tabdepth)) ? this.tabdepth : Number(this.tabdepth);
-      var tabindent = isNaN(Number(this.tabindent)) ? this.tabindent : Number(this.tabindent);
+      var width = toValue(this.width, this, 0);
+      var tabdepth = toValue(this.tabdepth);
+      var tabindent = toValue(this.tabindent);
       this.shape = tabShape(width, tabdepth, tabindent, this.color, this.id == "" ? undefined : this.id);
     }
   });

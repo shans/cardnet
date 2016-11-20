@@ -8,17 +8,36 @@ function union(setA, setB) {
     return union;
 }
 
+exports.union = union;
+
 class Value {
+  constructor() {
+    this.symbolic = true;
+  }
+
   resolve(dict) { return this; }
+
+  hasElementReference() {
+    return false;
+  }
+
+  setElementReferenceLength(length) { }
+
   static toValue(string) {
+    if (string == '<parent>')
+      return new ElementReferenceValue();
     if (string instanceof Value)
       return string.clone();
     if (!isNaN(Number(string)))
       return new ResolvedValue(Number(string));
+    if (typeof(string) !== "string")
+      console.log(string, typeof(string));
     if (string.includes('|'))
       return new WeakReferenceValue(string.split('|').map(a => a.trim()));
     return new ReferenceValue(string);
   }
+
+  dump() { return "Value"; }
 }
 
 exports.toValue = Value.toValue;
@@ -26,12 +45,14 @@ exports.toValue = Value.toValue;
 class ResolvedValue extends Value {
   constructor(value) {
     super();
+    this.symbolic = false;
     this.value = value;
     this.unresolved = new Set();
   }
   clone() {
     return new ResolvedValue(this.value);
   }
+  dump() { return this.value; }
 }
 
 class ReferenceValue extends Value {
@@ -51,6 +72,8 @@ class ReferenceValue extends Value {
 
     return this;
   }
+
+  dump() { return this.reference; }
 }
 
 class WeakReferenceValue extends Value {
@@ -58,6 +81,14 @@ class WeakReferenceValue extends Value {
     super();
     this.references = references.map(a => Value.toValue(a));
     this.unresolved = this.references.map(a => a.unresolved).reduce((a,b) => union(a, b), new Set());
+  }
+
+  hasElementReference() {
+    return this.references.map(a => a.hasElementReference()).reduce((a,b) => a || b, false);
+  }
+
+  setElementReferenceLength(length) {
+    this.references.map(a => a.setElementReferenceLength(length));
   }
 
   resolve(dict) {
@@ -73,6 +104,8 @@ class WeakReferenceValue extends Value {
       return resolvedReference;
     return new WeakReferenceValue([resolvedReference].concat(this.references.slice(1))).resolve(dict);
   }
+
+  dump() { return this.references.map(a => a.dump()).join((a,b) => a + ' | ' + b); }
 }
 
 class AlgorithmicValue extends Value {
@@ -81,6 +114,14 @@ class AlgorithmicValue extends Value {
     this.references = args;
     this.algorithm = f;
     this.unresolved = this.references.map(a => a.unresolved).reduce((a,b) => union(a, b), new Set());
+  }
+
+  hasElementReference() {
+    return this.references.map(a => a.hasElementReference()).reduce((a,b) => a || b, false);
+  }
+
+  setElementReferenceLength(length) {
+    this.references.map(a => a.setElementReferenceLength(length));
   }
 
   clone() {
@@ -102,21 +143,41 @@ class AlgorithmicValue extends Value {
       args.push(arguments[i]);
     return new AlgorithmicValue(args, f).resolve({});
   }
+  
+  dump() { return 'f(' + this.references.map(a => a.dump()).join((a,b) => a + ', ' + b); + ')' }
 }
 
 exports.apply = AlgorithmicValue.apply;
 
 class ElementReferenceValue extends Value {
-  constructor(element, side) { 
+  constructor() { 
     super();
-    this.element = element;
-    this.side = side;
+    this.resolvedLength = undefined;
+    this.unresolved = new Set();
+  }
+
+  hasElementReference() {
+    return true;
+  }
+
+  setElementReferenceLength(length) {
+    this.resolvedLength = length;
   }
 
   resolve(dict) {
-    if (this.element.sideToParent == this.side)
-      return this.element.parent.sides[this.element.parentSide].length.resolve();
+    if (this.resolvedLength !== undefined)
+      return this.resolvedLength.resolve();
     return this;
+  }
+
+  clone() {
+    return this;
+  }
+
+  dump() {
+    if (this.resolvedLength)
+      return '<parent:' + this.resolvedLength.dump() + '>';
+    return '<!parent!>';
   }
 }
 

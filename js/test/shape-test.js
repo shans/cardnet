@@ -26,6 +26,17 @@ describe('Shape', function() {
 	]);
       util.checkPointsMatch(new Point(15, 0), tab.base);
     });
+    it('should resolve <parent> references', function() {
+      var parent = Shape.rect(20, 10, 'solid');
+      var child = Shape.rect('<parent>', 10, 'solid');
+      parent.join(child, 0, 0);
+      var resolved = parent.resolve({}, [], []);
+      util.checkSideMatches(resolved.children[0].sides[0],
+        [
+          {at: new Point(0, 0), color: 'empty'},
+          {at: new Point(-20, 0)}
+        ]);
+    });
   });
   describe('#render()', function() {
     it('should produce a simple description of a simple shape', function() {
@@ -41,3 +52,4 @@ describe('Shape', function() {
     });
   });
 });
+

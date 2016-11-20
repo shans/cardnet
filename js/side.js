@@ -9,9 +9,8 @@ class SidePart {
     this.color = color;
   }
 
-  _unresolvedVars(dict) {
-    this.start._unresolvedVars(dict);
-    this.end._unresolvedVars(dict);
+  unresolved() {
+    return this.start.unresolved().concat(this.end.unresolved());
   }
 
   split(offset, colors) {
@@ -57,22 +56,20 @@ class Side {
       this.symbolic = true;
       this.color = color;
       this.resolve = dict => { var s = new Side(start.resolve(dict), end.resolve(dict), color); s.inverted = this.inverted; return s; }
-      var d = {};
-      start._unresolvedVars(d);
-      end._unresolvedVars(d);
-      this.unresolved = d;
     } else {
       this.parts = [new SidePart(start, end, 0, 1, color)];
       this.resolve = function() { return this; }.bind(this);
-      this.unresolved = [];
     }
     this.length = start.distanceTo(end);
     this.inverted = false;
   }
 
-  _unresolvedVars(dict) {
-    for (var k in this.unresolved)
-      dict[k] = k;
+  dump() {
+    return `SIDE (${this.start.dump()} -> ${this.end.dump()})`;
+  }
+
+  unresolved() {
+    return this.start.unresolved().concat(this.end.unresolved());
   } 
 
   invert() {
