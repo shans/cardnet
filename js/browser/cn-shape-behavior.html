@@ -25,7 +25,7 @@ var CNShapeBehavior = {
       var unresolved = shape.unresolvedVars();
       var resDict = {};
       var style = getComputedStyle(this);
-      for (var vname in unresolved) {
+      for (var vname of unresolved) {
         var value = style.getPropertyValue('--' + vname);
         if (value !== '')
           // TODO: Just numbers?

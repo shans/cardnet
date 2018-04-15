@@ -166,7 +166,7 @@ class ElementReferenceValue extends Value {
 
   resolve(dict) {
     if (this.resolvedLength !== undefined)
-      return this.resolvedLength.resolve();
+      return this.resolvedLength.resolve(dict);
     return this;
   }
 

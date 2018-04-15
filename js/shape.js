@@ -173,7 +173,7 @@ class Shape {
     // externally, offset=0 refers to matching centers. Internally, offset applies from
     // the start point of thisSide.
     offset += (thisSide.length.value - shapeSide.length.value) / 2;
-
+    
     if (offset <= -shapeSide.length.value && offset > thisSide.length.value)
       throw new RangeError("Can't join, offset out of range");
 
