@@ -1,6 +1,11 @@
 "use strict";
 
 let assert = require('assert');
+let Polygon = require('./polygon.js').Polygon;
+
+if (typeof assert !== 'function') {
+  assert = () => {};
+}
 
 (function() {
 
@@ -9,7 +14,8 @@ const PREVIOUS_EDGE = 1;
 const NEXT_EDGE = 2;
 
 class Face {
-  constructor(num_sides) {
+  constructor(num_sides, id) {
+    this.id = id;
     this.sides = [];
     for (var i = 0; i < num_sides; i++)
       this.sides.push(FREE_EDGE)
@@ -79,23 +85,50 @@ class Polyhedron {
     return output;
   }
 
+  asNet(sideLength) {
+    let numericArray = this.asNumericArray();
+    let faces = [];
+    for (let faceNo = 0; faceNo < numericArray.length; faceNo++) {
+      let face = numericArray[faceNo];
+      faces.push(new Polygon(face.length, sideLength));
+      let toIdx = 0;
+      let toNum = face[0];
+      for (let i = 1; i < face.length; i++) {
+        if (face[i] < toNum) {
+          toNum = face[i];
+          toIdx = i;
+        }
+      }
+      if (toNum < faces.length) {
+        let fromIdx = numericArray[toNum].indexOf(faceNo);
+        faces[toNum].join(faces[faces.length - 1], fromIdx, toIdx);
+      }
+    }
+    return faces[0];
+  }
+
   newFace(num_sides) {
-    let face = new Face(num_sides);
+    let face = new Face(num_sides, this.faces.length);
     this.faces.push(face);
     return face;
   }
 
   countFacesAroundVertex(face, edge, direction) {
     assert(edge !== null);
+    let originFace = face;
+    let originEdge = edge;
     let count = 1;
     let sideCounts = [face.numSides()];
     while (true) {
       let edgeToCheck = direction == PREVIOUS_EDGE ? edge.previous() : edge.next();
       if (edgeToCheck.connectedFace() == null)
-        return {face, edge: edgeToCheck, count, sideCounts};
+        return {face, edge: edgeToCheck, count, sideCounts, originFace, originEdge, direction};
       let newFace = edgeToCheck.connectedFace();
       edge = newFace.findEdgePointingAt(face);
       assert(edge !== null);
+      if (newFace == originFace) {
+        return {face, edge, count, sideCounts}; 
+      }
       face = newFace;
       count++;
       sideCounts.push(face.numSides());
@@ -110,8 +143,10 @@ class Polyhedron {
       return;
     // check previous vertex for extra connection point
     let previousInfo = this.countFacesAroundVertex(originFace, freeEdge, PREVIOUS_EDGE);
+
     // check next vertex for extra connection point
     let nextInfo = this.countFacesAroundVertex(originFace, freeEdge, NEXT_EDGE);
+
     // match sides
     let sideInfo = previousInfo.count > nextInfo.count ? previousInfo.sideCounts : nextInfo.sideCounts;
     let facesAround = facesAroundCorner.concat(facesAroundCorner);
@@ -130,11 +165,22 @@ class Polyhedron {
     let side = face.side(0);
     freeEdge.connect(side);
     // attach extra connection points
-    if (previousInfo.count == facesAroundCorner.length - 1) {
-      previousInfo.edge.connect(side.next());
+    assert(previousInfo.count < facesAroundCorner.length);
+    assert(nextInfo.count < facesAroundCorner.length);
+    let sideForPreviousInfo = side.next();
+    while (previousInfo.count == facesAroundCorner.length - 1) {
+      previousInfo.edge.connect(sideForPreviousInfo);
+      previousInfo = this.countFacesAroundVertex(previousInfo.face, previousInfo.edge, PREVIOUS_EDGE);
+      sideForPreviousInfo = sideForPreviousInfo.next();
     }
-    if (nextInfo.count == facesAroundCorner.length - 1)
-      nextInfo.edge.connect(side.previous());
+    // nextInfo needs to be recomputed in case previousInfo looping has changed it
+    nextInfo = this.countFacesAroundVertex(originFace, freeEdge, NEXT_EDGE);
+    let sideForNextInfo = side.previous();
+    while (nextInfo.count == facesAroundCorner.length - 1) {
+      nextInfo.edge.connect(sideForNextInfo);
+      nextInfo = this.countFacesAroundVertex(nextInfo.face, nextInfo.edge, NEXT_EDGE);
+      sideForNextInfo = sideForNextInfo.previous();
+    }
     return face;
   }
 

@@ -1,0 +1,32 @@
+<link rel='import' href='../browser/cardnet.html'>
+
+<style>
+#empty {
+  stroke: transparent;
+}
+
+#fold {
+  stroke: red;
+}
+
+</style>
+
+<div id='container'></div>
+<script>
+var base = new Polyhedron([3, 4, 3, 4]).asNet(20);
+var base2 = new Polyhedron([5,5,5]).asNet(20);
+var base3 = new Polyhedron([5,6,6]).asNet(20);
+
+var styleRules = 
+  [
+    new Rule(new ElementSelector('tabShape'), {tabdepth: 5, tabindent: 4}),
+    new Rule(new ComplexSelector(new IDSelector('lid')).append(Descendant, new ElementSelector('tabShape')), {tabdepth: 10})
+  ];
+
+
+var svg = toSVG([{shape: base.resolve({}, styleRules), point: new Point(50, 50)},
+                 {shape: base2.resolve({}, styleRules), point: new Point(200, 50)},
+                 {shape: base3.resolve({}, styleRules), point: new Point(100, 270)}]);
+container.append(svg);
+
+</script>

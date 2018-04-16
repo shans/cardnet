@@ -28,4 +28,8 @@ describe('Polyhedron', function() {
       ]);  
     })
   });
+  it('generates yet another face list', function() {
+    let polyhedron = new Polyhedron([5,5,5]);
+    console.log(polyhedron.asNumericArray());
+  })
 });

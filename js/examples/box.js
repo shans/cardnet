@@ -12,7 +12,7 @@ var back = base.join(cardnet.rect('width', 'height', 'solid'), 0, 0);
 back.join(cardnet.tabShape('height', 'tabdepth'), 1, 0);
 back.join(cardnet.tabShape('height', 'tabdepth'), 3, 0);
 
-var lid = front.join(cardnet.rect('width', 'depth', 'solid', id='lid'), 2, 0);
+var lid = front.join(cardnet.rect('width', 'depth', 'solid', 'lid'), 2, 0);
 lid.join(cardnet.tabShape('width', 'tabdepth'), 2, 0);
 lid.join(cardnet.tabShape('depth', 'tabdepth'), 3, 0);
 lid.join(cardnet.tabShape('depth', 'tabdepth'), 1, 0);

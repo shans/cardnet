@@ -4,6 +4,7 @@
   "description": "Build nets to cut out of cardboard",
   "main": "index.js",
   "dependencies": {
+    "chai": "^4.1.2",
     "makerjs": "^0.9.14"
   },
   "devDependencies": {
